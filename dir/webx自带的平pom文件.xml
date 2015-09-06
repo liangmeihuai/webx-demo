@@ -4,14 +4,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.alibaba.zhu</groupId>
-    <artifactId>webx-demo</artifactId>
-    <name>webx-demo</name>
-    <modules>
-        <module>web</module>
-        <module>biz</module>
-    </modules>
-    <packaging>pom</packaging>
+    <groupId>com.alibaba.webx</groupId>
+    <artifactId>new_webx</artifactId>
+    <name>My Simple Webx Application</name>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <properties>
         <java.version>1.6</java.version>
@@ -23,6 +19,39 @@
         <project.build.sourceEncoding>${java.encoding}</project.build.sourceEncoding>
         <productionMode>false</productionMode>
     </properties>
+
+
+    <dependencies>
+        <!--webx框架包-->
+        <dependency>
+            <groupId>com.alibaba.citrus</groupId>
+            <artifactId>citrus-webx-all</artifactId>
+        </dependency>
+        <!--logback日志系统框架包-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <!--servlet-api包-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <!--velocity模板包-->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+        <!--freemarker：模板引擎，一般用于生成html文件，基于模板生成文本输出的通用工具，
+        使用纯Java编写，能够生成各种文本：HTML、XML、RTF、Java源代码等等-->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+    </dependencies>
+
+
+
     <dependencyManagement>
         <dependencies>
             <!-- ================================================= -->
@@ -149,27 +178,109 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>com.alibaba.citrus</groupId>
-            <artifactId>citrus-webx-all</artifactId>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
+            <!--maven编译插件-->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <!--ant插件-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <echo message="project home:        ${basedir}" />
+                                <echo message="java home:           ${java.home}" />
+                                <echo message="java source version: ${java.version}" />
+                                <echo message="java target version: ${java.version}" />
+                                <echo message="java source charset: ${java.encoding}" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--Maven运行测试用例时，是通过调用maven的surefire插件并fork一个子进程来执行用例的。forkmode属性中指明是要为每个测试创建一个进程，还是所有测试在同一个进程中完成。
+            forkMode 可设置值有 “never”， “once”， “always” 和 “pertest”
+             1. pretest： 每一个测试创建一个新进程，为每个测试创建新的JVM是单独测试的最彻底方式，但也是最慢的，不适合hudson上持续回归
+             2.   once：在一个进程中进行所有测试。once为默认设置，在Hudson上持续回归时建议使用默认设置
+             always：在一个进程中并行的运行脚本，Junit4.7以上版本才可以使用，surefire的版本要在2.6以上，其中 threadCount：执行时，指定可分配的线程数量。只和参数parallel配合使用有效。默认：5
+             -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <argLine>-Xmx256m</argLine>
+                </configuration>
+            </plugin>
+            <!-- This plug-in provides the ability to generate Eclipse project files  ( .classpath and .project files),
+            as well as configure Eclipse to use Maven as an External Tool .-->
+            <plugin>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <classpathContainers>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--jetty插件-->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <webApp>
+                        <contextPath>/</contextPath>
+                    </webApp>
+                    <stopKey>webx</stopKey>
+                    <stopKey>9999</stopKey>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>8081</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                    <requestLog implementation="org.eclipse.jetty.server.NCSARequestLog">
+                        <filename>target/access.log</filename>
+                        <retainDays>90</retainDays>
+                        <append>false</append>
+                        <extended>false</extended>
+                        <logTimeZone>GMT+8:00</logTimeZone>
+                    </requestLog>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>productionMode</name>
+                            <value>${productionMode}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+            <!--springext插件，扩展schema-->
             <plugin>
                 <groupId>com.alibaba.citrus.tool</groupId>
                 <artifactId>springext-maven-plugin</artifactId>
-                <version>1.2</version>
             </plugin>
         </plugins>
         <pluginManagement>
