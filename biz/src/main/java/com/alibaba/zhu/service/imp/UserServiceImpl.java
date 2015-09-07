@@ -21,8 +21,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapperDao;
 
+
+    @Override
     public UserMapper getUserMapperDao() {
-        return userMapperDao;
+        return this.userMapperDao;
     }
 
     @Override
@@ -37,11 +39,11 @@ public class UserServiceImpl implements UserService {
 
     //对web层提供注册服务
     public void register(User user) throws UserExistException {
-        User b=userMapperDao.findByUserName(user.getUserName());
-        if(b!=null){
+        User b = userMapperDao.findByUserName(user.getUserName());
+        if (b != null) {
             throw new UserExistException("用户已经存在！");
             //用户存在，给web层抛出编译时异常
-        }else{
+        } else {
             user.setPassword(ServiceUtils.md5(user.getPassword()));
             userMapperDao.insert(user);
         }

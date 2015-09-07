@@ -39,6 +39,8 @@
     <!-- 资源装载。 -->
     <beans:import resource="common/resources.xml" />
 
+    <beans:import resource="classpath*:spring.xml"/>
+
     <!-- URI生成。 -->
     <beans:import resource="common/uris.xml" />
 

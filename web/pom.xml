@@ -40,6 +40,13 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
+        <!--我的配置 start-->
+        <dependency>
+            <groupId>com.alibaba.zhu</groupId>
+            <artifactId>demo-biz</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!--我的配置 end-->
     </dependencies>
 
     <build>

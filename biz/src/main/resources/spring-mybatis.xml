@@ -14,7 +14,7 @@
     </bean>
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="auditDataSource"/>
-        <property name="mapperLocations" value="com/alibaba/zhu/mapper/UserMapper.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
 
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
