@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @version V1.0.0
  * @since 2015-08-26
  */
-@Component
+
 public interface UserService {
      UserMapper getUserMapperDao();
      User getUserByID(Long id);

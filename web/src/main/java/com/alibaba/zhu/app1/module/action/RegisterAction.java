@@ -20,11 +20,24 @@ package com.alibaba.zhu.app1.module.action;
 import com.alibaba.citrus.turbine.Navigator;
 import com.alibaba.citrus.turbine.dataresolver.FormGroup;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.zhu.app1.Visitor;
+import com.alibaba.zhu.domain.User;
+import com.alibaba.zhu.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class RegisterAction {
+
+    @Autowired
+    private UserService userService;
+
     public void doRegister(@FormGroup("register") Visitor visitor, Navigator nav) {
         String name = visitor.getName();
-        nav.redirectTo("app1Link").withTarget("form/welcome").withParameter("name", name);
+        User user = userService.getUserByID(1L);
+        //System.out.println(JSON.toJSONString(user));
+        System.out.println(JSON.toJSONString(user));
+        nav.redirectTo("app1Link").withTarget("form/welcome").withParameter("name", JSON.toJSONString(user));
     }
 }

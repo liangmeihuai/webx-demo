@@ -19,9 +19,19 @@ package com.alibaba.zhu.app1.module.screen.form;
 
 import com.alibaba.citrus.turbine.Context;
 import com.alibaba.citrus.turbine.dataresolver.Param;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.zhu.domain.User;
+import com.alibaba.zhu.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Welcome {
+    @Autowired
+    private UserService userService;
     public void execute(@Param("name") String name, Context context) {
+        User user = userService.getUserByID(2L);
+        //System.out.println(JSON.toJSONString(user));
+        System.out.println(JSON.toJSONString(user));
+        context.put("user",user);
         context.put("name", name);
     }
 }
