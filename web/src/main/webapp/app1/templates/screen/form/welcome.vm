@@ -1,6 +1,0 @@
-
-$page.setTitle("Welcome, $name")
-<p>Welcome, $name!</p>
-
-<p>Welcome, $user.nickname!</p>
-

@@ -18,20 +18,16 @@
 package com.alibaba.zhu.app1.module.screen.form;
 
 import com.alibaba.citrus.turbine.Context;
+import com.alibaba.citrus.turbine.dataresolver.FormGroup;
 import com.alibaba.citrus.turbine.dataresolver.Param;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.zhu.domain.User;
 import com.alibaba.zhu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+//screen通常是读取数据库，把模板需要的对象放context中
+public class Message {
+    public void execute(@Param("message") String message, Context context) {
 
-public class Welcome {
-    @Autowired
-    private UserService userService;
-    public void execute(@Param("name") String name, Context context) {
-        User user = userService.getUserByID(2L);
-        //System.out.println(JSON.toJSONString(user));
-        System.out.println(JSON.toJSONString(user));
-        context.put("user",user);
-        context.put("name", name);
+        context.put("message", message);
     }
 }

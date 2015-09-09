@@ -1,0 +1,6 @@
+
+$page.setTitle("全局消息显示页面")
+<p> $message!</p>
+
+
+

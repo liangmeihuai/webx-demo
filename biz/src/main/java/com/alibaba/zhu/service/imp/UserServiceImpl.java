@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
 
     //对web层提供注册服务
     public void register(User user) throws UserExistException {
-        User b = userMapperDao.findByUserName(user.getUserName());
-        if (b != null) {
+        User u = userMapperDao.findByUserName(user.getUserName());
+        if (u != null) {
             throw new UserExistException("用户已经存在！");
             //用户存在，给web层抛出编译时异常
         } else {

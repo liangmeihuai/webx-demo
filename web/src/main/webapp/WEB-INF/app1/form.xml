@@ -13,6 +13,10 @@
              ">
 
     <services:form postOnlyByDefault="true">
+
+        <property-editor-registrar
+                class="com.alibaba.citrus.service.configuration.support.CustomDateRegistrar"
+                p:format="yyyy-MM-dd"/>
         <!--
           - ===============================================
           - 用来检查csrf token。
@@ -30,12 +34,64 @@
           - Simple form
           - ===============================================
          -->
+
         <group name="register" extends="csrfCheck">
-            <field name="name" displayName="你的名字">
+            <field name="userName" displayName="用户名">
                 <fm-validators:required-validator>
                     <message>必须填写 ${displayName}</message>
                 </fm-validators:required-validator>
+
+                <fm-validators:regexp-validator pattern="[A-Za-z]{3,8}">
+                    <message>${displayName}3-8位字母</message>
+                </fm-validators:regexp-validator>
             </field>
+            <field name="password" displayName="密码">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:regexp-validator pattern="\d{3,8}">
+                    <message>${displayName}3-8位数字</message>
+                </fm-validators:regexp-validator>
+            </field>
+            <field name="password2" displayName="确认密码">
+                <fm-validators:required-validator>
+                    <message>${displayName}不能为空</message>
+                </fm-validators:required-validator>
+                <fm-validators:string-compare-validator equalTo="password">
+                    <message>${displayName} 必须和 ${password.displayName} 相同</message>
+                </fm-validators:string-compare-validator>
+            </field>
+           <field name="email" displayName="邮箱">
+                <fm-validators:required-validator>
+                    <message>必须填写${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:regexp-validator pattern="\w+@\w+(\.\w+)+">
+                    <message>${displayName}格式不正确，3-8位数字</message>
+                </fm-validators:regexp-validator>
+            </field>
+             <field name="nickname" displayName="昵称">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+                <fm-validators:regexp-validator pattern="^([\u4e00-\u9fa5]+)$">
+                    <message>${displayName}必须为汉字</message>
+                </fm-validators:regexp-validator>
+            </field>
+
+            <field name="birthday" displayName="生日">
+                <!--          <fm-validators:required-validator>
+                              <message>必须填写 ${displayName}</message>
+                          </fm-validators:required-validator>-->
+
+                <fm-validators:date-validator format="yyyy-MM-dd" >
+                    <message>${displayName}格式不对</message>
+                </fm-validators:date-validator>
+            </field>
+<!--            <field name="name" displayName="你的名字">
+                <fm-validators:required-validator>
+                    <message>必须填写 ${displayName}</message>
+                </fm-validators:required-validator>
+            </field>-->
         </group>
     </services:form>
 
