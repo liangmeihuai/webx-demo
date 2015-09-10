@@ -37,6 +37,12 @@ $page.setTitle("It works.")
     #set($url = "$app1Link.setTarget('form/register')")
     <a href="$url">$url</a>
 </li>
+    <li>
+        <h2>Form Login</h2>
+
+        #set($url = "$app1Link.setTarget('form/login')")
+        <a href="$url">$url</a>
+    </li>
 
 <li>
     <h2>Single Screen for Multiple Templates</h2>
